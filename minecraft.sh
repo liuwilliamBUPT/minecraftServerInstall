@@ -121,7 +121,10 @@ fi
 #echo -n "just for stop,ready to cat > ~/minecraft/game.sh" nothing
 #read nothing
 
+#Check if eual.txt exists.
 if [ ! -f ~/minecraft/eula.txt ]; then
+	#If not, create game.sh to firstly launch mc, and this file will be created automatically.
+	
 	cat > ~/minecraft/game.sh<<EOF
 #!/usr/bin/expect
 set timeout 30
@@ -130,20 +133,20 @@ set minmem [lindex $argv 1]
 ser version [lindex $argv 2]
 cd ~/minecraft
 spawn java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.${version}.jar nogui
-expect "*Stopping*"
+expect "*Stopping*" exec sh -c {
+touch finised
+}
 EOF
 	temp=$?
-	#echo -n "just for stop ,execute game.sh" nothing
-	#read nothing
+	
+	#This may dosen't work?
 		
 	if [ $temp -eq 0 ]; then
 
 		chmod 700 ~/minecraft/game.sh
 		expect -f ~/minecraft/game.sh $maxmem $minmem $version
-		if [ -f finished ]; then
-			sed -i 's/eula=false/eula=true/g' ~/minecraft/eula.txt
-			sed -i 's/online-mode=true/online-mode=false/g' ~/minecraft/server.properties
-		fi
+		sed -i 's/eula=false/eula=true/g' ~/minecraft/eula.txt
+		sed -i 's/online-mode=true/online-mode=false/g' ~/minecraft/server.properties
 	fi	
 else
 	cat ~/minecraft/eula.txt | grep eula=true >/dev/null 2>&1 
@@ -158,8 +161,7 @@ else
 	fi
 fi
 
-echo -n "just for stop change eula finished" nothing
-read nothing
+
 cat > ~/minecraft/game.sh<<EOF
 #!/usr/bin/expect
 set timeout 30
