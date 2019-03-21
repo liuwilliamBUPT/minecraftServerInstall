@@ -1,6 +1,6 @@
 #!/bin/bash
-#use current path to subsitute ~/
-#This function is used to check whether the input is numbers.
+
+#This function is used to check whether the input is numbers.Accept string arguments and replace numbers with regulars.Then check whether the ${tmp} is null.
 checkInt(){
 tmp=$(echo $1|sed 's/[0-9]//g')
 if [ -n "${tmp}" ]; then
@@ -10,26 +10,36 @@ else
 fi
 }
 
-echo 'Check java install status.Notice that this script will only check openjdk-8-jdk-headless install status.'
 
+echo 'Check java install status. Notice that this script will check openjdk-8-jdk-headless install status.'
 
 
 #change to install jdk8 sudo apt install openjdk-8-jdk-headless
-
+#maybe change here to case.
 if dpkg --get-selections | grep openjdk-8-jdk-headless; then
-	
+	echo "Package openjdk-8-jdk-headless have been installed."
+else
+	echo "Installing openjdk-8-jdk-headless... "
 	if sudo apt-get update 2>/dev/null && sudo apt-get install -y openjdk-8-jdk-headless 2>/dev/null; then
 	apt-get update && apt-get install -y openjdk-8-jdk-headless
 	fi
 fi
+
 #sudo may not install
+
+echo "Create minecraft directory."
 if [ ! -d ~/minecraft ]; then
 	mkdir minecraft
 fi
+
 cd minecraft || cd ~/minecraft || return 255
-flag=0
+
+#Set a flag to detect whether to download a new minecraft server.
+
+
 if [ -f ~/minecraft/minecraft_server.*.jar ]; then
 	tempver=$(find ~/minecraft/minecraft_server.*.jar | awk -F[\.] '{print $2"."$3"."$4}')
+	#Store the existed minecraft server version in tempver.
 	echo -n "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one?(Y/n)[Default = N]:"
 	read judge
 	if [ -z $judge ];then
@@ -41,13 +51,14 @@ if [ -f ~/minecraft/minecraft_server.*.jar ]; then
 		flag=1
 		;;
 	N | n)
-		:
+		flag=0
 		;;
 	esac
 else
 	flag=1
 fi
 
+#handle flag.
 if [ $flag -eq 1 ]; then
 	echo -n "Chose the version(default = 1.12.2) you want to use:"
 	read version
@@ -61,9 +72,11 @@ fi
 
 # The above url may be invalid in the future.
 
+#Use loop to ensure the input strings are numeric.
 while true
 do
-	read -p "Set mem max and min usage, example:1024 1024:" maxmem minmem
+	echo "Notice:You can use Ctrl + Backspace to delete error entry."
+	read -p "Set the minimum memory and maximum memory, example:1024 1024:" minmem maxmem
 	#If you make an input mistake, use Ctrl + Backspace to delete that.
 	#whether how much args this will return 0
 	#echo $maxmem $minmem
@@ -74,12 +87,12 @@ do
 	else
 		check=1
 	fi
-	#echo $check
+	#Use maxS and minS to monitor the maxmem and minmen input status.
 	checkInt $maxmem
 	maxS=$?
 	checkInt $minmem
 	minS=$?
-	#problem 0 input or 1 input this loop will exit.
+	#Problem is that 0 input or 1 input this loop will exit. This may fixed?
 	if [[ $check -eq 0 ]]; then
 		echo "Please enter the memory setting!"
 		#if check is not equal to 0 
@@ -90,19 +103,23 @@ do
 		break
 	fi
 done
+#Check the installation status of the expect.
+echo "Check the installation status of the expect."
 dpkg --get-selections | grep expect
 if [ $? -ne 0 ]; then
+	echo "Installing expect..."
 	sudo apt-get install -y expect 2>/dev/null
 	if [ $? -ne 0 ]; then
+	echo "Installing expect..."
 	apt-get install -y expect
 	fi
 fi
 
-#the part after here not execute
+#The part below is still on testing.
 #First, to check if the game.sh exists. If not, check eula.txt...
-echo "First, to check if the game.sh exists. If not, check eula.txt..."
-echo -n "just for stop,ready to cat > ~/minecraft/game.sh" nothing
-read nothing
+#echo "First, to check if the game.sh exists. If not, check eula.txt..."
+#echo -n "just for stop,ready to cat > ~/minecraft/game.sh" nothing
+#read nothing
 
 if [ ! -f ~/minecraft/eula.txt ]; then
 	cat > ~/minecraft/game.sh<<EOF
@@ -116,8 +133,8 @@ spawn java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.${version}.jar no
 expect "*Stopping*"
 EOF
 	temp=$?
-	echo -n "just for stop ,execute game.sh" nothing
-	read nothing
+	#echo -n "just for stop ,execute game.sh" nothing
+	#read nothing
 		
 	if [ $temp -eq 0 ]; then
 
