@@ -10,3 +10,4 @@ There are a lot of things to do.
 4.Fix some logic error.  
 5.Optimized redundant code.  
 6.Check the error paste in line 95.#Problem is that 0 input or 1 input this loop will exit. This may fixed?  
+7.Make it possible to accept parameters.
