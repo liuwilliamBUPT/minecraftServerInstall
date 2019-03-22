@@ -11,7 +11,7 @@ fi
 }
 
 
-echo 'Check java install status. Notice that this script will check openjdk-8-jdk-headless install status.'
+echo 'Check installation status of java. Notice that this script will check openjdk-8-jdk-headless install status.'
 
 
 #change to install jdk8 sudo apt install openjdk-8-jdk-headless
@@ -20,8 +20,9 @@ if dpkg --get-selections | grep openjdk-8-jdk-headless; then
 	echo "Package openjdk-8-jdk-headless have been installed."
 else
 	echo "Installing openjdk-8-jdk-headless... "
-	if sudo apt-get update 2>/dev/null && sudo apt-get install -y openjdk-8-jdk-headless 2>/dev/null; then
+	if ! sudo apt-get update 2>/dev/null && ! sudo apt-get install -y openjdk-8-jdk-headless 2>/dev/null; then
 	apt-get update && apt-get install -y openjdk-8-jdk-headless
+	echo "Package openjdk-8-jdk-headless installed. "
 	fi
 fi
 
@@ -33,6 +34,7 @@ if [ ! -d ~/minecraft ]; then
 fi
 
 cd minecraft || cd ~/minecraft || return 255
+if [ $? = 255 ]; then echo "No such Directory!";fi
 
 #Set a flag to detect whether to download a new minecraft server.
 
@@ -52,6 +54,7 @@ if [ -f ~/minecraft/minecraft_server.*.jar ]; then
 		;;
 	N | n)
 		flag=0
+		version=$tempver
 		;;
 	esac
 else
@@ -65,9 +68,17 @@ if [ $flag -eq 1 ]; then
 	if [ -z $version ];then
 		version='1.12.2'
 	fi
-	cd minecraft || cd ~/minecraft || return 255
+	#dupe cd minecraft || cd ~/minecraft || return 255
 	#wget -O minecraft_server.jar https://s3.amazonaws.com/Minecraft.Download/versions/$version/minecraft_server.$version.jar
-	wget https://s3.amazonaws.com/Minecraft.Download/versions/$version/minecraft_server.$version.jar
+	#wget https://s3.amazonaws.com/Minecraft.Download/versions/$version/minecraft_server.$version.jar
+	wget --header="Host: s3.amazonaws.com" \
+	--header="Connection: keep-alive" \
+	--header="Upgrade-Insecure-Requests: 1" \
+	--header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" \
+	--header="Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" \
+	--header="Accept-Encoding: gzip, deflate, br" \
+	--header="Accept-Language: zh-CN,zh;q=0.9,fr;q=0.8,zh-TW;q=0.7" \
+	"https://s3.amazonaws.com/Minecraft.Download/versions/"$version"/minecraft_server."$version".jar"
 fi
 
 # The above url may be invalid in the future.
@@ -130,7 +141,7 @@ if [ ! -f ~/minecraft/eula.txt ]; then
 set timeout 30
 set maxmem [lindex $argv 0]
 set minmem [lindex $argv 1]
-ser version [lindex $argv 2]
+set version [lindex $argv 2]
 cd ~/minecraft
 spawn java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.${version}.jar nogui
 expect "*Stopping*" {exec sh -c {
@@ -138,7 +149,8 @@ touch finised
 }}
 EOF
 	#echo '#! /usr/bin/expect -f
-	#puts aaa' >flagf.exp
+	#puts aaa' >flagf.exp 
+	#success？
 	temp=$?
 	
 	#This may dosen't work?
@@ -169,12 +181,15 @@ cat > ~/minecraft/gameInit.exp<<EOF
 set timeout 30
 set maxmem [lindex $argv 0]
 set minmem [lindex $argv 1]
-ser version [lindex $argv 2]
+set version [lindex $argv 2]
 cd ~/minecraft 
 
 spawn java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.${version}.jar nogui
-expect "*Done*" {send "stop\r"}
-touch finished
+expect "*Done*" {
+send "stop\r"
+exec sh -c {
+touch finised
+}}
 EOF
 if [ $? -eq 0 ]; then
 	chmod 700 ~/minecraft/gameInit.exp
@@ -184,7 +199,7 @@ while [ ! $? ]
 do
 	sleep 1s
 done
-rm gameInit.exp
+rm gameInit.exp finised
 #java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.jar nogui
 #if [ -z $version ];then
 #	$version='1.12.2'
@@ -192,9 +207,11 @@ rm gameInit.exp
 forgeversion="1.12.2-14.23.5.2812"
 #add set up 
 if [ ! -f ~/minecraft/forge-*-universal.jar ];then
-	wget -O forgeInstaller.jar https://files.minecraftforge.net/maven/net/minecraftforge/forge/$forgeversion/forge-$forgeversion-installer.jar
-	java -jar forgeInstaller.jar nogui --installServer --offline
-	rm forgeInstaller.jar forgeInstaller.jar.log
+	#wget -O forgeInstaller.jar https://files.minecraftforge.net/maven/net/minecraftforge/forge/$forgeversion/forge-$forgeversion-installer.jar
+	#java -jar forgeInstaller.jar nogui --installServer --offline
+	wget https://files.minecraftforge.net/maven/net/minecraftforge/forge/$forgeversion/forge-$forgeversion-installer.jar
+	java -jar forge-$forgeversion-installer.jar nogui --installServer
+	#rm forgeInstaller.jar forgeInstaller.jar.log
 fi
 
 java -Xmx${maxmem}M -Xms${minmem}M -jar forge-$forgeversion-universal.jar nogui
