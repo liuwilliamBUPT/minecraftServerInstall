@@ -116,54 +116,56 @@ if [ $? -ne 0 ]; then
 fi
 
 #The part below is still on testing.
-#First, to check if the game.sh exists. If not, check eula.txt...
-#echo "First, to check if the game.sh exists. If not, check eula.txt..."
-#echo -n "just for stop,ready to cat > ~/minecraft/game.sh" nothing
+#First, to check if the gameInit.exp exists. If not, check eula.txt...
+#echo "First, to check if the gameInit.exp exists. If not, check eula.txt..."
+#echo -n "just for stop,ready to cat > ~/minecraft/gameInit.exp" nothing
 #read nothing
 
 #Check if eual.txt exists.
 if [ ! -f ~/minecraft/eula.txt ]; then
-	#If not, create game.sh to firstly launch mc, and this file will be created automatically.
-	
-	cat > ~/minecraft/game.sh<<EOF
-#!/usr/bin/expect
+	#If not, create gameInit.exp to firstly launch mc, and this file will be created automatically.
+	#RTFM to learn how to use expect wisely.
+	cat > ~/minecraft/gameInit.exp<<EOF
+#!/usr/bin/expect -f
 set timeout 30
 set maxmem [lindex $argv 0]
 set minmem [lindex $argv 1]
 ser version [lindex $argv 2]
 cd ~/minecraft
 spawn java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.${version}.jar nogui
-expect "*Stopping*" exec sh -c {
+expect "*Stopping*" {exec sh -c {
 touch finised
-}
+}}
 EOF
+	#echo '#! /usr/bin/expect -f
+	#puts aaa' >flagf.exp
 	temp=$?
 	
 	#This may dosen't work?
 		
 	if [ $temp -eq 0 ]; then
 
-		chmod 700 ~/minecraft/game.sh
-		expect -f ~/minecraft/game.sh $maxmem $minmem $version
+		chmod 700 ~/minecraft/gameInit.exp
+		expect ~/minecraft/gameInit.exp $maxmem $minmem $version
 		sed -i 's/eula=false/eula=true/g' ~/minecraft/eula.txt
 		sed -i 's/online-mode=true/online-mode=false/g' ~/minecraft/server.properties
 	fi	
 else
+	#Else check whether the files have been modified.
 	cat ~/minecraft/eula.txt | grep eula=true >/dev/null 2>&1 
 	if [ $? -eq 0 ];then
 		echo -n "Detect that there you might have run minecraft_server.${version}.jar successfully."
 	else
-		echo -n "just for stop, change eula" nothing
-		read nothing
+		echo "Modify eula.txt and server.properties now."
 		sed -i 's/eula=false/eula=true/g' ~/minecraft/eula.txt
 		sed -i 's/online-mode=true/online-mode=false/g' ~/minecraft/server.properties
-		rm game.sh
+		rm gameInit.exp
 	fi
 fi
 
 
-cat > ~/minecraft/game.sh<<EOF
-#!/usr/bin/expect
+cat > ~/minecraft/gameInit.exp<<EOF
+#!/usr/bin/expect -f
 set timeout 30
 set maxmem [lindex $argv 0]
 set minmem [lindex $argv 1]
@@ -175,19 +177,20 @@ expect "*Done*" {send "stop\r"}
 touch finished
 EOF
 if [ $? -eq 0 ]; then
-	chmod 700 ~/minecraft/game.sh
-	expect -f ~/minecraft/game.sh $maxmem $minmem $version
+	chmod 700 ~/minecraft/gameInit.exp
+	expect ~/minecraft/gameInit.exp $maxmem $minmem $version
 fi
 while [ ! $? ]
 do
 	sleep 1s
 done
-rm game.sh
+rm gameInit.exp
 #java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.jar nogui
 #if [ -z $version ];then
 #	$version='1.12.2'
 #fi
 forgeversion="1.12.2-14.23.5.2812"
+#add set up 
 if [ ! -f ~/minecraft/forge-*-universal.jar ];then
 	wget -O forgeInstaller.jar https://files.minecraftforge.net/maven/net/minecraftforge/forge/$forgeversion/forge-$forgeversion-installer.jar
 	java -jar forgeInstaller.jar nogui --installServer --offline
