@@ -1,85 +1,371 @@
-root@103018:~# sudo bash test.sh
 Check installation status of java. Notice that this script will check openjdk-8-jdk-headless install status.
 sudo						install
-apt 1.2.32 (amd64)
-Usage: apt [options] command
 
-apt is a commandline package manager and provides commands for
-searching and managing as well as querying information about packages.
-It provides the same functionality as the specialized APT tools,
-like apt-get and apt-cache, but enables options more suitable for
-interactive use by default.
+WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
 
-Most used commands:
-  list - list packages based on package names
-  search - search in package descriptions
-  show - show package details
-  install - install packages
-  remove - remove packages
-  autoremove - Remove automatically all unused packages
-  update - update list of available packages
-  upgrade - upgrade the system by installing/upgrading packages
-  full-upgrade - upgrade the system by removing/installing/upgrading packages
-  edit-sources - edit the source information file
-
-See apt(8) for more information about the available commands.
-Configuration options and syntax is detailed in apt.conf(5).
-Information about how to configure sources can be found in sources.list(5).
-Package and version choices can be expressed via apt_preferences(5).
-Security details are available in apt-secure(8).
-                                        This APT has Super Cow Powers.
-apt 1.2.32 (amd64)
-Usage: apt-get [options] command
-       apt-get [options] install|remove pkg1 [pkg2 ...]
-       apt-get [options] source pkg1 [pkg2 ...]
-
-apt-get is a command line interface for retrieval of packages
-and information about them from authenticated sources and
-for installation, upgrade and removal of packages together
-with their dependencies.
-
-Most used commands:
-  update - Retrieve new lists of packages
-  upgrade - Perform an upgrade
-  install - Install new packages (pkg is libc6 not libc6.deb)
-  remove - Remove packages
-  purge - Remove packages and config files
-  autoremove - Remove automatically all unused packages
-  dist-upgrade - Distribution upgrade, see apt-get(8)
-  dselect-upgrade - Follow dselect selections
-  build-dep - Configure build-dependencies for source packages
-  clean - Erase downloaded archive files
-  autoclean - Erase old downloaded archive files
-  check - Verify that there are no broken dependencies
-  source - Download source archives
-  download - Download the binary package into the current directory
-  changelog - Download and display the changelog for the given package
-
-See apt-get(8) for more information about the available commands.
-Configuration options and syntax is detailed in apt.conf(5).
-Information about how to configure sources can be found in sources.list(5).
-Package and version choices can be expressed via apt_preferences(5).
-Security details are available in apt-secure(8).
-                                        This APT has Super Cow Powers.
-gpg: keyring `/tmp/tmpbuzvqoa4/secring.gpg' created
-gpg: keyring `/tmp/tmpbuzvqoa4/pubring.gpg' created
-gpg: requesting key 86F44E2A from hkp server keyserver.ubuntu.com
-gpg: /tmp/tmpbuzvqoa4/trustdb.gpg: trustdb created
-gpg: key 86F44E2A: public key "Launchpad OpenJDK builds (all archs)" imported
-gpg: Total number processed: 1
-gpg:               imported: 1  (RSA: 1)
-OK
-test.sh: line 56: CN: command not found
-Hit:1 http://ubuntu-archive.mirror.serveriai.lt xenial InRelease
-Hit:2 http://ubuntu-archive.mirror.serveriai.lt xenial-updates InRelease                                     
+openjdk-8-jdk-headless/xenial-updates,xenial-security,now 8u212-b03-0ubuntu1.16.04.1 amd64 [installed]
+Hit:1 http://ubuntu-archive.mirror.serveriai.lt xenial InRelease                                                             
+Hit:2 http://ubuntu-archive.mirror.serveriai.lt xenial-updates InRelease                                                     
 Hit:3 http://ubuntu-archive.mirror.serveriai.lt xenial-security InRelease                                    
-Hit:4 http://archive.canonical.com/ubuntu xenial InRelease                                                                             
-Hit:5 http://ppa.launchpad.net/openjdk-r/ppa/ubuntu xenial InRelease                               
-Reading package lists... Done
+Hit:4 http://ppa.launchpad.net/openjdk-r/ppa/ubuntu xenial InRelease                                                                   
+Hit:5 http://archive.canonical.com/ubuntu xenial InRelease                                                                             
+Reading package lists... Done                                                         
 Building dependency tree       
 Reading state information... Done
-1 package can be upgraded. Run 'apt list --upgradable' to see it.
+All packages are up to date.
 openjdk-8-jdk-headless:amd64			install
 Package openjdk-8-jdk-headless have been installed.
 Create minecraft directory.
 Chose the version(default = 1.12.2) you want to use:
+--2019-06-21 15:10:18--  https://s3.amazonaws.com/Minecraft.Download/versions/1.12.2/minecraft_server.1.12.2.jar
+Resolving s3.amazonaws.com (s3.amazonaws.com)... 52.216.109.221
+Connecting to s3.amazonaws.com (s3.amazonaws.com)|52.216.109.221|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 30222121 (29M) [application/octet-stream]
+Saving to: 'minecraft_server.1.12.2.jar'
+
+minecraft_server.1.12.2.jar                          100%[===================================================================================================================>]  28.82M  11.5MB/s    in 2.5s    
+
+2019-06-21 15:10:21 (11.5 MB/s) - 'minecraft_server.1.12.2.jar' saved [30222121/30222121]
+
+Notice:You can use Ctrl + Backspace to delete error entry.
+Set the minimum memory and maximum memory, example:1024 1024:1024 1024
+Check the installation status of the expect.
+expect						install
+tcl-expect:amd64				install
+spawn java -Xmx1024M -Xms1024M -jar minecraft_server.1.12.2.jar nogui
+[15:10:43] [Server thread/INFO]: Starting minecraft server version 1.12.2
+[15:10:43] [Server thread/INFO]: Loading properties
+[15:10:43] [Server thread/WARN]: server.properties does not exist
+[15:10:43] [Server thread/INFO]: Generating new properties file
+[15:10:43] [Server thread/WARN]: Failed to load eula.txt
+[15:10:43] [Server thread/INFO]: You need to agree to the EULA in order to run the server. Go to eula.txt for more info.
+[15:10:43] [Server thread/INFO]: Stopping server
+#Minecraft server properties
+#Fri Jun 21 15:10:43 EEST 2019
+#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).
+#Fri Jun 21 15:10:43 EEST 2019
+eula=true
+spawn java -Xmx1024M -Xms1024M -jar minecraft_server.1.12.2.jar nogui
+[15:10:52] [Server thread/INFO]: Starting minecraft server version 1.12.2
+[15:10:52] [Server thread/INFO]: Loading properties
+[15:10:52] [Server thread/INFO]: Default game type: SURVIVAL
+[15:10:52] [Server thread/INFO]: Generating keypair
+[15:10:53] [Server thread/INFO]: Starting Minecraft server on *:25565
+[15:10:53] [Server thread/INFO]: Using epoll channel type
+Jun 21, 2019 3:10:53 PM io.netty.util.internal.MacAddressUtil defaultMachineId
+WARNING: Failed to find a usable hardware address from the network interfaces; using random bytes: 19:c1:fd:7c:30:9c:72:ac
+[15:10:54] [Server thread/INFO]: Preparing level "world"
+[15:10:54] [Server thread/INFO]: Loaded 488 advancements
+[15:10:57] [Server thread/INFO]: Preparing start region for level 0
+[15:10:58] [Server thread/INFO]: Preparing spawn area: 3%
+[15:10:59] [Server thread/INFO]: Preparing spawn area: 5%
+[15:11:00] [Server thread/INFO]: Preparing spawn area: 7%
+[15:11:01] [Server thread/INFO]: Preparing spawn area: 9%
+[15:11:02] [Server thread/INFO]: Preparing spawn area: 12%
+[15:11:03] [Server thread/INFO]: Preparing spawn area: 14%
+[15:11:04] [Server thread/INFO]: Preparing spawn area: 17%
+[15:11:05] [Server thread/INFO]: Preparing spawn area: 20%
+[15:11:06] [Server thread/INFO]: Preparing spawn area: 23%
+[15:11:07] [Server thread/INFO]: Preparing spawn area: 26%
+[15:11:08] [Server thread/INFO]: Preparing spawn area: 29%
+[15:11:09] [Server thread/INFO]: Preparing spawn area: 33%
+[15:11:10] [Server thread/INFO]: Preparing spawn area: 36%
+[15:11:11] [Server thread/INFO]: Preparing spawn area: 40%
+[15:11:12] [Server thread/INFO]: Preparing spawn area: 43%
+--2019-06-21 15:11:13--  https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.5.2812/forge-1.12.2-14.23.5.2812-installer.jar
+Resolving files.minecraftforge.net (files.minecraftforge.net)... 142.44.226.189
+Connecting to files.minecraftforge.net (files.minecraftforge.net)|142.44.226.189|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 5043759 (4.8M) [application/java-archive]
+Saving to: 'forge-1.12.2-14.23.5.2812-installer.jar'
+
+forge-1.12.2-14.23.5.2812-installer.jar              100%[===================================================================================================================>]   4.81M  3.72MB/s    in 1.3s    
+
+2019-06-21 15:11:15 (3.72 MB/s) - 'forge-1.12.2-14.23.5.2812-installer.jar' saved [5043759/5043759]
+
+Setting up logger: /root/minecraft/forge-1.12.2-14.23.5.2812-installer.jar.log
+java.net.preferIPv4Stack=true
+Installing server to current directory
+MESSAGE: Data kindly mirrored by Forge at http://MinecraftForge.net/
+MESSAGE: Considering library net.minecraftforge:forge:1.12.2-14.23.5.2812: Not Downloading {Wrong Side}
+MESSAGE: Considering library net.minecraft:launchwrapper:1.12
+MESSAGE: Downloading library net.minecraft:launchwrapper:1.12
+MESSAGE: Trying unpacked library net.minecraft:launchwrapper:1.12
+MESSAGE: Considering library org.ow2.asm:asm-all:5.2
+MESSAGE: Downloading library org.ow2.asm:asm-all:5.2
+MESSAGE: Trying unpacked library org.ow2.asm:asm-all:5.2
+MESSAGE: Considering library org.jline:jline:3.5.1
+MESSAGE: Downloading library org.jline:jline:3.5.1
+MESSAGE: Trying unpacked library org.jline:jline:3.5.1
+MESSAGE: Considering library net.java.dev.jna:jna:4.4.0
+MESSAGE: Downloading library net.java.dev.jna:jna:4.4.0
+MESSAGE: Trying unpacked library net.java.dev.jna:jna:4.4.0
+MESSAGE: Considering library com.typesafe.akka:akka-actor_2.11:2.3.3
+MESSAGE: Downloading library com.typesafe.akka:akka-actor_2.11:2.3.3
+MESSAGE: Unpacking packed file akka-actor_2.11-2.3.3.jar.pack.xz
+  Signed
+  Checksum Length: 140942
+  Total Length:    2606968
+  Temp File:       /tmp/art3509593587723377259.pack
+MESSAGE: Successfully unpacked packed file akka-actor_2.11-2.3.3.jar.pack.xz
+Checking "/root/minecraft/./libraries/com/typesafe/akka/akka-actor_2.11/2.3.3/akka-actor_2.11-2.3.3.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library com.typesafe:config:1.2.1
+MESSAGE: Downloading library com.typesafe:config:1.2.1
+MESSAGE: Unpacking packed file config-1.2.1.jar.pack.xz
+  Signed
+  Checksum Length: 12246
+  Total Length:    111476
+  Temp File:       /tmp/art7418761417484628563.pack
+MESSAGE: Successfully unpacked packed file config-1.2.1.jar.pack.xz
+Checking "/root/minecraft/./libraries/com/typesafe/config/1.2.1/config-1.2.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-actors-migration_2.11:1.1.0
+MESSAGE: Downloading library org.scala-lang:scala-actors-migration_2.11:1.1.0
+MESSAGE: Unpacking packed file scala-actors-migration_2.11-1.1.0.jar.pack.xz
+  Signed
+  Checksum Length: 3311
+  Total Length:    52481
+  Temp File:       /tmp/art1315377279732000036.pack
+MESSAGE: Successfully unpacked packed file scala-actors-migration_2.11-1.1.0.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-actors-migration_2.11/1.1.0/scala-actors-migration_2.11-1.1.0.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-compiler:2.11.1
+MESSAGE: Downloading library org.scala-lang:scala-compiler:2.11.1
+MESSAGE: Unpacking packed file scala-compiler-2.11.1.jar.pack.xz
+  Signed
+  Checksum Length: 942120
+  Total Length:    9183051
+  Temp File:       /tmp/art9178767023203647957.pack
+MESSAGE: Successfully unpacked packed file scala-compiler-2.11.1.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-compiler/2.11.1/scala-compiler-2.11.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang.plugins:scala-continuations-library_2.11:1.0.2
+MESSAGE: Downloading library org.scala-lang.plugins:scala-continuations-library_2.11:1.0.2
+MESSAGE: Unpacking packed file scala-continuations-library_2.11-1.0.2.jar.pack.xz
+  Signed
+  Checksum Length: 2416
+  Total Length:    18871
+  Temp File:       /tmp/art5536068387990439921.pack
+MESSAGE: Successfully unpacked packed file scala-continuations-library_2.11-1.0.2.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/plugins/scala-continuations-library_2.11/1.0.2/scala-continuations-library_2.11-1.0.2.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang.plugins:scala-continuations-plugin_2.11.1:1.0.2
+MESSAGE: Downloading library org.scala-lang.plugins:scala-continuations-plugin_2.11.1:1.0.2
+MESSAGE: Unpacking packed file scala-continuations-plugin_2.11.1-1.0.2.jar.pack.xz
+  Signed
+  Checksum Length: 16815
+  Total Length:    139418
+  Temp File:       /tmp/art1995230573738129131.pack
+MESSAGE: Successfully unpacked packed file scala-continuations-plugin_2.11.1-1.0.2.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/plugins/scala-continuations-plugin_2.11.1/1.0.2/scala-continuations-plugin_2.11.1-1.0.2.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-library:2.11.1
+MESSAGE: Downloading library org.scala-lang:scala-library:2.11.1
+MESSAGE: Unpacking packed file scala-library-2.11.1.jar.pack.xz
+  Signed
+  Checksum Length: 341368
+  Total Length:    5984083
+  Temp File:       /tmp/art2295813727923583451.pack
+MESSAGE: Successfully unpacked packed file scala-library-2.11.1.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-library/2.11.1/scala-library-2.11.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-parser-combinators_2.11:1.0.1
+MESSAGE: Downloading library org.scala-lang:scala-parser-combinators_2.11:1.0.1
+MESSAGE: Unpacking packed file scala-parser-combinators_2.11-1.0.1.jar.pack.xz
+  Signed
+  Checksum Length: 37614
+  Total Length:    273457
+  Temp File:       /tmp/art588138345089795741.pack
+MESSAGE: Successfully unpacked packed file scala-parser-combinators_2.11-1.0.1.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-parser-combinators_2.11/1.0.1/scala-parser-combinators_2.11-1.0.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-reflect:2.11.1
+MESSAGE: Downloading library org.scala-lang:scala-reflect:2.11.1
+MESSAGE: Unpacking packed file scala-reflect-2.11.1.jar.pack.xz
+  Signed
+  Checksum Length: 291610
+  Total Length:    3217021
+  Temp File:       /tmp/art1629498015398491848.pack
+MESSAGE: Successfully unpacked packed file scala-reflect-2.11.1.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-reflect/2.11.1/scala-reflect-2.11.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-swing_2.11:1.0.1
+MESSAGE: Downloading library org.scala-lang:scala-swing_2.11:1.0.1
+MESSAGE: Unpacking packed file scala-swing_2.11-1.0.1.jar.pack.xz
+  Signed
+  Checksum Length: 39019
+  Total Length:    888907
+  Temp File:       /tmp/art4182990964691221005.pack
+MESSAGE: Successfully unpacked packed file scala-swing_2.11-1.0.1.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-swing_2.11/1.0.1/scala-swing_2.11-1.0.1.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library org.scala-lang:scala-xml_2.11:1.0.2
+MESSAGE: Downloading library org.scala-lang:scala-xml_2.11:1.0.2
+MESSAGE: Unpacking packed file scala-xml_2.11-1.0.2.jar.pack.xz
+  Signed
+  Checksum Length: 35380
+  Total Length:    739509
+  Temp File:       /tmp/art1042900907727943312.pack
+MESSAGE: Successfully unpacked packed file scala-xml_2.11-1.0.2.jar.pack.xz
+Checking "/root/minecraft/./libraries/org/scala-lang/scala-xml_2.11/1.0.2/scala-xml_2.11-1.0.2.jar" internal checksums
+    checksums.sha1 validated successfully
+    Jar contents validated successfully
+MESSAGE: Considering library lzma:lzma:0.0.1
+MESSAGE: Downloading library lzma:lzma:0.0.1
+MESSAGE: Trying unpacked library lzma:lzma:0.0.1
+MESSAGE: Considering library net.sf.jopt-simple:jopt-simple:5.0.3
+MESSAGE: Downloading library net.sf.jopt-simple:jopt-simple:5.0.3
+MESSAGE: Trying unpacked library net.sf.jopt-simple:jopt-simple:5.0.3
+MESSAGE: Considering library java3d:vecmath:1.5.2
+MESSAGE: Downloading library java3d:vecmath:1.5.2
+MESSAGE: Trying unpacked library java3d:vecmath:1.5.2
+MESSAGE: Considering library net.sf.trove4j:trove4j:3.0.3
+MESSAGE: Downloading library net.sf.trove4j:trove4j:3.0.3
+MESSAGE: Trying unpacked library net.sf.trove4j:trove4j:3.0.3
+MESSAGE: Considering library org.apache.maven:maven-artifact:3.5.3
+MESSAGE: Downloading library org.apache.maven:maven-artifact:3.5.3
+MESSAGE: Trying unpacked library org.apache.maven:maven-artifact:3.5.3
+Extracting: /forge-1.12.2-14.23.5.2812-universal.jar
+To:          /root/minecraft/./forge-1.12.2-14.23.5.2812-universal.jar
+The server installed successfully, you should now be able to run the file forge-1.12.2-14.23.5.2812-universal.jar
+You can delete this installer file now if you wish
+#Minecraft server properties
+#Fri Jun 21 15:10:57 EEST 2019
+generator-settings=
+use-native-transport=true
+op-permission-level=4
+level-name=world
+allow-flight=false
+prevent-proxy-connections=false
+server-port=25565
+max-world-size=29999984
+level-type=DEFAULT
+level-seed=
+force-gamemode=false
+server-ip=
+network-compression-threshold=256
+max-build-height=256
+spawn-npcs=true
+white-list=false
+spawn-animals=true
+hardcore=false
+snooper-enabled=true
+resource-pack-sha1=
+online-mode=true
+resource-pack=
+pvp=true
+difficulty=1
+enable-command-block=false
+gamemode=0
+player-idle-timeout=0
+max-players=20
+spawn-monsters=true
+view-distance=10
+generate-structures=true
+motd=A Minecraft Server
+[15:11:55] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLServerTweaker
+[15:11:55] [main/INFO] [LaunchWrapper]: Using primary tweak class name net.minecraftforge.fml.common.launcher.FMLServerTweaker
+[15:11:55] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLServerTweaker
+[15:11:55] [main/INFO] [FML]: Forge Mod Loader version 14.23.5.2812 for Minecraft 1.12.2 loading
+[15:11:55] [main/INFO] [FML]: Java is OpenJDK 64-Bit Server VM, version 1.8.0_212, running on Linux:amd64:2.6.32-042stab138.1, installed at /usr/lib/jvm/java-8-openjdk-amd64/jre
+[15:11:56] [main/INFO] [FML]: Searching /root/minecraft/./mods for mods
+[15:11:56] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[15:11:56] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[15:11:56] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[15:11:56] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[15:11:56] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[15:12:00] [main/INFO] [FML]: Found valid fingerprint for Minecraft Forge. Certificate fingerprint e3c3d50c7c986df74c645c0ac54639741c90a557
+[15:12:00] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[15:12:00] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[15:12:02] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.TerminalTweaker
+[15:12:02] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.TerminalTweaker
+[15:12:02] [main/INFO] [LaunchWrapper]: Launching wrapped minecraft {net.minecraft.server.MinecraftServer}
+[15:12:14] [Server thread/INFO] [minecraft/DedicatedServer]: Starting minecraft server version 1.12.2
+[15:12:14] [Server thread/INFO] [FML]: MinecraftForge v14.23.5.2812 Initialized
+[15:12:14] [Server thread/INFO] [FML]: Starts to replace vanilla recipe ingredients with ore ingredients.
+[15:12:14] [Server thread/INFO] [FML]: Replaced 1036 ore ingredients
+[15:12:15] [Server thread/INFO] [FML]: Config directory created successfully
+[15:12:15] [Server thread/INFO] [FML]: Searching /root/minecraft/./mods for mods
+[15:12:16] [Server thread/INFO] [FML]: Forge Mod Loader has identified 4 mods to load
+[15:12:16] [Server thread/WARN] [FML]: Missing English translation for FML: assets/fml/lang/en_us.lang
+[15:12:17] [Server thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge] at CLIENT
+[15:12:17] [Server thread/INFO] [FML]: Attempting connection with missing mods [minecraft, mcp, FML, forge] at SERVER
+[15:12:19] [Server thread/INFO] [FML]: Processing ObjectHolder annotations
+[15:12:19] [Server thread/INFO] [FML]: Found 1169 ObjectHolder annotations
+[15:12:19] [Server thread/INFO] [FML]: Identifying ItemStackHolder annotations
+[15:12:19] [Server thread/INFO] [FML]: Found 0 ItemStackHolder annotations
+[15:12:19] [Server thread/INFO] [FML]: Configured a dormant chunk cache size of 0
+[15:12:19] [Server thread/INFO] [FML]: Applying holder lookups
+[15:12:19] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Starting version check at http://files.minecraftforge.net/maven/net/minecraftforge/forge/promotions_slim.json
+[15:12:19] [Server thread/INFO] [FML]: Holder lookups applied
+[15:12:19] [Server thread/INFO] [FML]: Applying holder lookups
+[15:12:19] [Server thread/INFO] [FML]: Holder lookups applied
+[15:12:19] [Server thread/INFO] [FML]: Applying holder lookups
+[15:12:19] [Server thread/INFO] [FML]: Holder lookups applied
+[15:12:19] [Server thread/INFO] [FML]: Applying holder lookups
+[15:12:19] [Server thread/INFO] [FML]: Holder lookups applied
+[15:12:19] [Server thread/INFO] [FML]: Injecting itemstacks
+[15:12:19] [Server thread/INFO] [FML]: Itemstack injection complete
+[15:12:19] [Server thread/INFO] [minecraft/DedicatedServer]: Loading properties
+[15:12:19] [Server thread/INFO] [minecraft/DedicatedServer]: Default game type: SURVIVAL
+[15:12:19] [Server thread/INFO] [minecraft/DedicatedServer]: Generating keypair
+[15:12:19] [Forge Version Check/INFO] [forge.VersionCheck]: [forge] Found status: OUTDATED Target: 14.23.5.2838
+[15:12:20] [Server thread/INFO] [minecraft/DedicatedServer]: Starting Minecraft server on *:25565
+[15:12:20] [Server thread/INFO] [minecraft/NetworkSystem]: Using epoll channel type
+> Jun 21, 2019 3:12:20 PM io.netty.util.internal.MacAddressUtil defaultMachineId
+WARNING: Failed to find a usable hardware address from the network interfaces; using random bytes: e2:1d:98:86:da:d0:99:e6
+[15:12:20] [Server thread/INFO] [FML]: Applying holder lookups
+[15:12:20] [Server thread/INFO] [FML]: Holder lookups applied
+[15:12:21] [Server thread/INFO] [FML]: Injecting itemstacks
+[15:12:21] [Server thread/INFO] [FML]: Itemstack injection complete
+[15:12:21] [Server thread/INFO] [FML]: Forge Mod Loader has successfully loaded 4 mods
+[15:12:21] [Server thread/INFO] [minecraft/DedicatedServer]: Preparing level "world"
+[15:12:22] [Server thread/INFO] [FML]: Loading dimension 0 (world) (net.minecraft.server.dedicated.DedicatedServer@6f293392)
+[15:12:23] [Server thread/INFO] [minecraft/AdvancementList]: Loaded 488 advancements
+[15:12:23] [Server thread/INFO] [FML]: Loading dimension -1 (world) (net.minecraft.server.dedicated.DedicatedServer@6f293392)
+[15:12:23] [Server thread/INFO] [FML]: Loading dimension 1 (world) (net.minecraft.server.dedicated.DedicatedServer@6f293392)
+[15:12:23] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for level 0
+[15:12:25] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 0%
+[15:12:26] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 4%
+[15:12:27] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 7%
+[15:12:28] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 11%
+[15:12:29] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 17%
+[15:12:30] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 23%
+[15:12:31] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 28%
+[15:12:32] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 31%
+[15:12:33] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 38%
+[15:12:34] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 43%
+[15:12:36] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 49%
+[15:12:37] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 51%
+[15:12:38] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 53%
+[15:12:39] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 54%
+[15:12:40] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 55%
+[15:12:41] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 57%
+[15:12:42] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 59%
+[15:12:43] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 61%
+[15:12:44] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 63%
+[15:12:45] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 65%
+[15:12:46] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 68%
+[15:12:48] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 71%
+[15:12:49] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 74%
+[15:12:50] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 77%
+[15:12:51] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 82%
+[15:12:52] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 86%
+[15:12:53] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 90%
+[15:12:54] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing spawn area: 96%
+[15:12:54] [Server thread/INFO] [minecraft/DedicatedServer]: Done (33.545s)! For help, type "help" or "?"
+[15:12:55] [Server thread/INFO] [FML]: Unloading dimension -1
+[15:12:55] [Server thread/INFO] [FML]: Unloading dimension 1
+[15:12:58] [Server thread/WARN] [minecraft/MinecraftServer]: Can't keep up! Did the system time change, or is the server overloaded? Running 3071ms behind, skipping 61 tick(s)
