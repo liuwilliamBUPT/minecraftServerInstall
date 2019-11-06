@@ -29,7 +29,7 @@ else
 fi
 
 # sudo may not install
-echo -n "Please speicify the path to install minecraft:"
+echo "Please speicify the path to install minecraft:"
 read installPath
 
 if [ ! -d ${installPath}/minecraft ]; then
@@ -45,7 +45,7 @@ if [ -f ./minecraft_server.*.jar ]; then
 	tempver=$(find ./minecraft_server.*.jar | awk -F[\.] '{print $2"."$3"."$4}')
 	# Store the existed minecraft server version in tempver.
     while true; do
-        echo -n "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one? (yes/NO):"
+        echo "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one? (yes/NO):"
         read yn
         if [ -z ${yn} ]; then
             yn='N'
@@ -70,7 +70,7 @@ fi
 
 # handle flag.
 if [ ${flag} -eq 1 ]; then
-	echo -n "Chose the version(default = 1.12.2) you want to use:"
+	echo "Chose the version(default = 1.12.2) you want to use:"
 	read version
 	if [ -z ${version} ];then
 		version='1.12.2'
@@ -165,7 +165,7 @@ else
 	# Else check whether the files have been modified.
 	cat ./eula.txt | grep eula=true >/dev/null
 	if [[ $? -eq 0 ]]; then
-		echo -n "Detect that there you might have run minecraft_server.${version}.jar successfully."
+		echo "Detect that there you might have run minecraft_server.${version}.jar successfully."
 	else
 		echo "Modify eula.txt and server.properties now."
 		sed -i 's/eula=false/eula=true/g' ./eula.txt
@@ -205,7 +205,7 @@ rm gameInit.exp finised
 # fi
 forgeversion="1.12.2-14.23.5.2812"
 # add set up
-if [ ! -f ./forge-*-universal.jar ];then
+if [ ! -f ./forge-*-universal.jar ]; then
 	# wget -O forgeInstaller.jar https://files.minecraftforge.net/maven/net/minecraftforge/forge/$forgeversion/forge-$forgeversion-installer.jar
 	# java -jar forgeInstaller.jar nogui --installServer --offline
 	wget https://files.minecraftforge.net/maven/net/minecraftforge/forge/${forgeversion}/forge-${forgeversion}-installer.jar
