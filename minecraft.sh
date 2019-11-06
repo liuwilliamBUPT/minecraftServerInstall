@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # This function is used to check whether the input is numbers.Accept string arguments and replace numbers with regulars.Then check whether the ${tmp} is null.
 checkInt(){
 tmp=$(echo $1|sed 's/[0-9]//g')
@@ -30,35 +32,38 @@ fi
 echo -n "Please speicify the path to install minecraft:"
 read installPath
 
-if [ ! -d ~/minecraft ]; then
+if [ ! -d ${installPath}/minecraft ]; then
     echo "Create minecraft directory."
-	mkdir minecraft
+	mkdir ${installPath}/minecraft
 fi
 
-cd minecraft || cd ~/minecraft || return 255
+cd ${installPath}/minecraft || return 255
 if [ $? = 255 ]; then echo "No such Directory!";fi
 
 # Set a flag to detect whether to download a new minecraft server.
-
-
-if [ -f ~/minecraft/minecraft_server.*.jar ]; then
-	tempver=$(find ~/minecraft/minecraft_server.*.jar | awk -F[\.] '{print $2"."$3"."$4}')
+if [ -f ./minecraft_server.*.jar ]; then
+	tempver=$(find ./minecraft_server.*.jar | awk -F[\.] '{print $2"."$3"."$4}')
 	# Store the existed minecraft server version in tempver.
-	echo -n "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one?(Y/n)[Default = N]:"
-	read judge
-	if [ -z ${judge} ];then
-		judge='N'
-	fi
-	case ${judge} in
-	Y | y)
-		rm minecraft_server.${tempver}.jar
-		flag=1
-		;;
-	N | n)
-		flag=0
-		version=${tempver}
-		;;
-	esac
+    while true; do
+        echo -n "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one? (yes/NO):"
+        read yn
+        if [ -z ${yn} ]; then
+            yn='N'
+        fi
+        case $yn in
+            [Yy]* )
+                rm minecraft_server.${tempver}.jar
+                flag=1
+                break
+                ;;
+            [Nn]* )
+                flag=0
+                version=${tempver}
+                break
+                ;;
+            * ) echo "Please answer yes or no.";;
+        esac
+    done
 else
 	flag=1
 fi
@@ -70,9 +75,8 @@ if [ ${flag} -eq 1 ]; then
 	if [ -z ${version} ];then
 		version='1.12.2'
 	fi
-	# dupe cd minecraft || cd ~/minecraft || return 255
-	# wget -O minecraft_server.jar https://s3.amazonaws.com/Minecraft.Download/versions/$version/minecraft_server.$version.jar
-	# wget https://s3.amazonaws.com/Minecraft.Download/versions/$version/minecraft_server.$version.jar
+
+    # This download url may be invalid in the future.
 	wget --header="Host: s3.amazonaws.com" \
 	--header="Connection: keep-alive" \
 	--header="Upgrade-Insecure-Requests: 1" \
@@ -80,19 +84,13 @@ if [ ${flag} -eq 1 ]; then
 	--header="Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" \
 	--header="Accept-Encoding: gzip, deflate, br" \
 	--header="Accept-Language: zh-CN,zh;q=0.9,fr;q=0.8,zh-TW;q=0.7" \
-	"https://s3.amazonaws.com/Minecraft.Download/versions/"${version}"/minecraft_server."${version}".jar"
+	"https://s3.amazonaws.com/Minecraft.Download/versions/${version}/minecraft_server.${version}.jar"
 fi
 
-# The above url may be invalid in the future.
-
-# Use loop to ensure the input strings are numeric.
 while true
 do
-	echo "Notice:You can use Ctrl + Backspace to delete error entry."
-	read -p "Set the minimum memory and maximum memory, example:1024 1024:" minmem maxmem
-	# If you make an input mistake, use Ctrl + Backspace to delete that.
-	# whether how much args this will return 0
-	# echo $maxmem $minmem
+	# Use Ctrl + Backspace to delete error input.
+	read -p "Set the minimum memory and maximum memory. [example: 512 1024]: " minmem maxmem
 	if [ -z ${maxmem} ]; then
 		check=0
 	elif [ -z ${minmem} ]; then
@@ -100,24 +98,26 @@ do
 	else
 		check=1
 	fi
-	# Use maxS and minS to monitor the maxmem and minmen input status.
-	checkInt ${maxmem}
+    checkInt ${maxmem}
 	maxS=$?
 	checkInt ${minmem}
 	minS=$?
-	# Problem is that 0 input or 1 input this loop will exit. This may fixed?
-	if [[ ${check} -eq 0 ]]; then
-		echo "Please enter the memory setting!"
-		# if check is not equal to 0
-	elif [[ ${maxS} -eq 0 || ${minS} -eq 0 ]]; then
-		# if maxS or minS
-		echo "Please make sure you what you entered are numbers!"
+
+    if [[ ${maxS} -eq 0 || ${minS} -eq 0 || ${maxmem} -eq 0 || ${minmem} -eq 0 || ${minmem} -gt ${maxmem} ]]; then
+        check=0
+    else
+        check=1
+    fi
+
+    if [[ ${check} -eq 0 ]]; then
+		echo -e "\nPlease check your input!"
 	else
 		break
 	fi
 done
-# Check the installation status of the expect.
-echo "Check the installation status of the expect."
+
+# Check the installation status of expect.
+echo "Check the installation status of expect."
 dpkg --get-selections | grep expect
 if [ $? -ne 0 ]; then
 	echo "Installing expect..."
