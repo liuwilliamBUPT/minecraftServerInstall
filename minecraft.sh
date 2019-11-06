@@ -163,7 +163,7 @@ EOF
 	fi
 else
 	# Else check whether the files have been modified.
-	cat ./eula.txt | grep eula=true >/dev/null 2&>1
+	cat ./eula.txt | grep eula=true >/dev/null
 	if [[ $? -eq 0 ]]; then
 		echo -n "Detect that there you might have run minecraft_server.${version}.jar successfully."
 	else
