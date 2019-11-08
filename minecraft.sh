@@ -12,24 +12,61 @@ else
 fi
 }
 
-
-echo 'Check installation status of java. Please note that this script will just check installation status of openjdk-8-jdk-headless.'
-
-
-# change to install jdk8 sudo apt install openjdk-8-jdk-headless
-# maybe change here to case.
-if dpkg --get-selections | grep openjdk-8-jdk-headless; then
-	echo "Package openjdk-8-jdk-headless have been installed."
+# This function is used to execute sudo command.
+sudoExec(){
+if $sudo_flag; then
+	local cmd='sudo '
+	cmd+=$@
+	eval $cmd
+	return $?
 else
-	echo "Installing openjdk-8-jdk-headless... "
-	if ! sudo apt-get update 2>/dev/null && ! sudo apt-get install -y openjdk-8-jdk-headless 2>/dev/null; then
-	apt-get update && apt-get install -y openjdk-8-jdk-headless
-	echo "Package openjdk-8-jdk-headless installed. "
+	eval $1
+	return $?
+fi
+}
+
+# Detecting sudo status.
+if dpkg --get-selections | grep sudo ; then
+	sudo_flag=true
+else
+	sudo_flag=false
+fi
+
+# Detect ip address.
+
+geoip=$(curl -s https://api.ip.sb/geoip)
+if echo $ip | grep '"country_code":"CN"' >/dev/null 2>&1; then
+	CN=true
+else
+	CN=false
+fi
+
+checkPackage='apt search openjdk-8-jdk-headless | grep openjdk-8-jdk-headless'
+
+if ! sudoExec $checkPackage; then
+	apt_repo='apt-get install software-properties-common python-software-properties -y'
+	sudoExec $apt_repo
+	sudoExec 'add-apt-repository ppa:openjdk-r/ppa -y'
+	if CN; then
+		changePPA='sed -i "s/ppa\\.launchpad\\.net/launchpad\\.proxy\\.ustclug\\.org/g" /etc/apt/sources.list.d/openjdk-r-ubuntu-ppa-*.list'
+		sudoExec $changePPA
 	fi
 fi
 
-# sudo may not install
-echo "Please speicify the path to install minecraft:"
+echo 'Check installation status of java. Please note that this script will just check installation status of openjdk-8-jdk-headless.'
+
+# Installing openjdk-8-jdk-headless.
+sudoExec 'apt update'
+
+if dpkg --get-selections | grep openjdk-8-jdk-headless; then
+	echo -e "\033[1;44;37mPackage openjdk-8-jdk-headless have been installed.\033[0m\n"
+else
+	echo -e "\033[1;44;37mInstalling openjdk-8-jdk-headless... \033[0m"
+	sudoExec 'apt update && apt install -y openjdk-8-jdk-headless'
+	echo -e "\033[1;44;37mPackage openjdk-8-jdk-headless installed. \033[0m"
+fi
+
+echo -n "Please speicify the path to install minecraft:"
 read installPath
 
 if [ ! -d ${installPath}/minecraft ]; then
@@ -45,7 +82,7 @@ if [ -f ./minecraft_server.*.jar ]; then
 	tempver=$(find ./minecraft_server.*.jar | awk -F[\.] '{print $2"."$3"."$4}')
 	# Store the existed minecraft server version in tempver.
     while true; do
-        echo "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one? (yes/NO):"
+        echo -n "Detect that there exists minecraft_server.${tempver}.jar, do you want to get a new one? (yes/NO):"
         read yn
         if [ -z ${yn} ]; then
             yn='N'
@@ -68,9 +105,9 @@ else
 	flag=1
 fi
 
-# handle flag.
+# Handle flag.
 if [ ${flag} -eq 1 ]; then
-	echo "Chose the version(default = 1.12.2) you want to use:"
+	echo -n "Chose the version(default = 1.12.2) you want to use:"
 	read version
 	if [ -z ${version} ];then
 		version='1.12.2'
@@ -120,19 +157,12 @@ done
 echo "Check the installation status of expect."
 dpkg --get-selections | grep expect
 if [ $? -ne 0 ]; then
-	echo "Installing expect..."
-	sudo apt-get install -y expect 2>/dev/null
-	if [ $? -ne 0 ]; then
-	echo "Installing expect..."
-	apt-get install -y expect
-	fi
+	echo -e "\033[1;44;37mInstalling expect...\033[0m\n"
+	installExpect='apt install -y expect >/dev/null 2>&1'
+	sudoExec $installExpect
 fi
 
-# The part below is still on testing.
-# First, to check if the gameInit.exp exists. If not, check eula.txt...
-# echo "First, to check if the gameInit.exp exists. If not, check eula.txt..."
-# echo -n "just for stop, ready to cat > ./gameInit.exp" nothing
-# read nothing
+# First, check the existation of the gameInit.exp. If not, check eula.txt...
 
 # Check if eual.txt exists.
 if [ ! -f ./eula.txt ]; then
@@ -150,12 +180,8 @@ expect "*Stopping*" {exec sh -c {
 touch finised
 }}
 EOF
-	# echo '#! /usr/bin/expect -f
-	# puts aaa' >flagf.exp
-	# success？
-	# This may dosen't work?
 
-	if [[ $? -eq 0 ]]; then
+    if [[ $? -eq 0 ]]; then
 		chmod 700 ./gameInit.exp
 		expect ./gameInit.exp ${maxmem} ${minmem} ${version}
 		sed -i 's/eula=false/eula=true/g' ./eula.txt
@@ -213,4 +239,6 @@ if [ ! -f ./forge-*-universal.jar ]; then
 	# rm forgeInstaller.jar forgeInstaller.jar.log
 fi
 
+sed -i 's/online-mode=true/online-mode=false/g' ~/minecraft/server.properties
+echo -e "\033[1;44;37mRuning forge server!\033[0m\n"
 java -Xmx${maxmem}M -Xms${minmem}M -jar forge-${forgeversion}-universal.jar nogui
