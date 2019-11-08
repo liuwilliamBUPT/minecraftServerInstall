@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # This function is used to check whether the input is numbers.Accept string arguments and replace numbers with regulars.Then check whether the ${tmp} is null.
 checkInt(){
 tmp=$(echo $1|sed 's/[0-9]//g')
