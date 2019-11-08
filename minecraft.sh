@@ -42,7 +42,7 @@ fi
 checkPackage='apt search openjdk-8-jdk-headless | grep openjdk-8-jdk-headless'
 
 if ! sudoExec $checkPackage; then
-	apt_repo='apt-get install software-properties-common python-software-properties -y'
+	apt_repo='apt install software-properties-common python-software-properties -y'
 	sudoExec $apt_repo
 	sudoExec 'add-apt-repository ppa:openjdk-r/ppa -y'
 	if CN; then
