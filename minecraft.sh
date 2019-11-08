@@ -237,6 +237,6 @@ if [ ! -f ./forge-*-universal.jar ]; then
 	# rm forgeInstaller.jar forgeInstaller.jar.log
 fi
 
-sed -i 's/online-mode=true/online-mode=false/g' ~/minecraft/server.properties
+sed -i 's/online-mode=true/online-mode=false/g' ${installPath}/minecraft/server.properties
 echo -e "\033[1;44;37mRuning forge server!\033[0m\n"
 java -Xmx${maxmem}M -Xms${minmem}M -jar forge-${forgeversion}-universal.jar nogui
