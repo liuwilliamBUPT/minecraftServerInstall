@@ -71,7 +71,7 @@ read installPath
 
 if [ ! -d ${installPath}/minecraft ]; then
     echo "Create minecraft directory."
-	mkdir ${installPath}/minecraft
+	mkdir -p ${installPath}/minecraft
 fi
 
 cd ${installPath}/minecraft || return 255
