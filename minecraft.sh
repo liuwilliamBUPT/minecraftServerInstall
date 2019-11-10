@@ -64,11 +64,11 @@ else
 	echo -e "\033[1;44;37mPackage openjdk-8-jdk-headless installed. \033[0m"
 fi
 
-echo -n "Please speicify the path to install minecraft (default:~/minecraft) :"
+echo -n "Please speicify the path to install minecraft (default:${HOME}/minecraft) :"
 read installPath
 
 if [ -z ${installPath} ]; then
-    installPath="~/minecraft"
+    installPath="${HOME}/minecraft"
 fi
 echo ${installPath} | grep 'minecraft/\?$'
 if [ $? -eq 0 ]; then
