@@ -153,7 +153,7 @@ done
 
 # Check the installation status of expect.
 echo "Check the installation status of expect."
-dpkg --get-selections | grep expect
+dpkg --get-selections | grep "^expect"
 if [ $? -ne 0 ]; then
 	echo -e "\033[1;44;37mInstalling expect...\033[0m\n"
 	installExpect='apt install -y expect >/dev/null 2>&1'
