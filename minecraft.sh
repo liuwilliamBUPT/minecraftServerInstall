@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This function is used to check whether the input is numbers.Accept string arguments and replace numbers with regulars.Then check whether the ${tmp} is null.
+# This function is used to check whether the input is numbers. Accept string arguments and replace numbers with regulars. Then check whether the ${tmp} is null.
 checkInt(){
 tmp=$(echo $1|sed 's/[0-9]//g')
 if [ -n "${tmp}" ]; then
@@ -31,7 +31,6 @@ else
 fi
 
 # Detect ip address.
-
 geoip=$(curl -s https://api.ip.sb/geoip)
 if echo $ip | grep '"country_code":"CN"' >/dev/null 2>&1; then
 	CN=true
@@ -41,13 +40,13 @@ fi
 
 checkPackage='apt search openjdk-8-jdk-headless | grep openjdk-8-jdk-headless'
 
-if ! sudoExec $checkPackage; then
+if ! sudoExec ${checkPackage}; then
 	apt_repo='apt install software-properties-common python-software-properties -y'
-	sudoExec $apt_repo
+	sudoExec ${apt_repo}
 	sudoExec 'add-apt-repository ppa:openjdk-r/ppa -y'
 	if CN; then
 		changePPA='sed -i "s/ppa\\.launchpad\\.net/launchpad\\.proxy\\.ustclug\\.org/g" /etc/apt/sources.list.d/openjdk-r-ubuntu-ppa-*.list'
-		sudoExec $changePPA
+		sudoExec ${changePPA}
 	fi
 fi
 
@@ -231,10 +230,8 @@ do
 	sleep 1s
 done
 rm gameInit.exp finised
-# java -Xmx${maxmem}M -Xms${minmem}M -jar minecraft_server.jar nogui
-# if [ -z $version ];then
-#  	$version='1.12.2'
-# fi
+
+
 forgeversion="1.12.2-14.23.5.2812"
 # add set up
 if [ ! -f ./forge-*-universal.jar ]; then
